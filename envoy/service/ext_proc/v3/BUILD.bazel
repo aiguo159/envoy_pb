@@ -1,0 +1,40 @@
+package(default_visibility = ["//visibility:public"])
+
+load("@rules_proto//proto:defs.bzl", "proto_library")
+load("@com_github_grpc_grpc//bazel:cc_grpc_library.bzl", "cc_grpc_library")
+
+proto_library(
+    name = "external_processor_proto",
+    srcs = ["external_processor.proto"],
+    deps = [
+        "@com_github_cncf_udpa//udpa/annotations:pkg",
+        "@com_github_cncf_udpa//xds/core/v3:pkg",
+        "//validate:validate_proto",
+        "//envoy/config/core/v3:base_proto",
+        "//envoy/config/core/v3:grpc_service_proto",
+        "//envoy/extensions/filters/http/ext_proc/v3:processing_mode_proto",
+        "//envoy/type/v3:http_status_proto",
+    ],
+)
+
+cc_proto_library(
+    name = "external_processor_cc_proto",
+    deps = [":external_processor_proto"],
+)
+
+cc_grpc_library(
+    name = "external_processor_cc_grpc",
+    srcs = [":external_processor_proto"],
+    grpc_only = True,
+    deps = [
+        "//envoy/config/core/v3:address_cc_proto",
+        "//envoy/config/core/v3:base_cc_proto",
+        "//envoy/config/core/v3:grpc_service_cc_proto",
+        "//envoy/config/core/v3:http_uri_cc_proto",
+        "//envoy/config/core/v3:socket_option_cc_proto",
+        "//envoy/extensions/filters/http/ext_proc/v3:ext_proc_cc_proto",
+        "//envoy/extensions/filters/http/ext_proc/v3:processing_mode_cc_proto",
+        "//envoy/type/v3:envoy_types_cc_proto",
+        ":external_processor_cc_proto",
+    ],
+)

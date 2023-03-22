@@ -1,0 +1,19 @@
+package(default_visibility = ["//visibility:public"])
+
+load("@rules_proto//proto:defs.bzl", "proto_library")
+
+proto_library(
+    name = "mutation_rules_proto",
+    srcs = ["mutation_rules.proto"],
+    deps = [
+        "@com_github_cncf_udpa//udpa/annotations:pkg",
+        "//envoy/config/core/v3:base_proto",
+        "//envoy/type/matcher/v3:regex_proto",
+        "//validate:validate_proto",
+    ],
+)
+
+cc_proto_library(
+    name = "mutation_rules_cc_proto",
+    deps = [":mutation_rules_proto"],
+)

@@ -1,0 +1,98 @@
+package(default_visibility = ["//visibility:public"])
+
+load("@rules_proto//proto:defs.bzl", "proto_library")
+
+# todo: more granular/precise dependency instead of the whole pkg:
+#   "@com_github_cncf_udpa//xds/core/v3:pkg",
+#   "@com_github_cncf_udpa//xds/core/v3:pkg",
+
+proto_library(
+    name = "socket_option_proto",
+    srcs = ["socket_option.proto"],
+    deps = [
+        "@com_github_cncf_udpa//udpa/annotations:pkg",
+        "//validate:validate_proto",
+    ],
+)
+
+proto_library(
+    name = "address_proto",
+    srcs = ["address.proto"],
+    deps = [
+        "@com_github_cncf_udpa//udpa/annotations:pkg",
+        "//envoy/annotations:deprecation_proto",
+        "//validate:validate_proto",
+        ":socket_option_proto",
+    ],
+)
+
+proto_library(
+    name = "http_uri_proto",
+    srcs = ["http_uri.proto"],
+    deps = [
+        "@com_github_cncf_udpa//udpa/annotations:pkg",
+        "//validate:validate_proto",
+    ],
+)
+
+proto_library(
+    name = "backoff_proto",
+    srcs = ["backoff.proto"],
+    deps = [
+        "@com_github_cncf_udpa//udpa/annotations:pkg",
+        "//validate:validate_proto",
+    ],
+)
+
+proto_library(
+    name = "base_proto",
+    srcs = ["base.proto"],
+    deps = [
+        "@com_github_cncf_udpa//udpa/annotations:pkg",
+        "@com_github_cncf_udpa//xds/core/v3:pkg",
+        "//validate:validate_proto",
+        "//envoy/annotations:deprecation_proto",
+        "//envoy/type/v3:http_status_proto",
+        "//envoy/type/v3:percent_proto",
+        "//envoy/type/v3:semantic_version_proto",
+        ":address_proto",
+        ":backoff_proto",
+        ":http_uri_proto",
+        ":socket_option_proto",
+    ],
+)
+
+proto_library(
+    name = "grpc_service_proto",
+    srcs = ["grpc_service.proto"],
+    deps = [
+        "@com_github_cncf_udpa//udpa/annotations:pkg",
+        "//validate:validate_proto",
+        ":base_proto",
+    ],
+)
+
+cc_proto_library(
+    name = "socket_option_cc_proto",
+    deps = [":socket_option_proto"],
+)
+
+cc_proto_library(
+    name = "address_cc_proto",
+    deps = [":address_proto"],
+)
+
+cc_proto_library(
+    name = "http_uri_cc_proto",
+    deps = [":http_uri_proto"],
+)
+
+cc_proto_library(
+    name = "base_cc_proto",
+    deps = [":base_proto",],
+)
+
+cc_proto_library(
+    name = "grpc_service_cc_proto",
+    deps = [":grpc_service_proto",],
+)

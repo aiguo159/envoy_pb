@@ -1,0 +1,63 @@
+package(default_visibility = ["//visibility:public"])
+
+load("@rules_proto//proto:defs.bzl", "proto_library")
+
+proto_library(
+    name = "http_status_proto",
+    srcs = ["http_status.proto"],
+    deps = [
+        "@com_github_cncf_udpa//udpa/annotations:pkg",
+        #"@com_github_cncf_udpa//xds/annotations/v3:pkg",
+        "//validate:validate_proto",
+    ],
+)
+
+proto_library(
+    name = "percent_proto",
+    srcs = ["percent.proto"],
+    deps = [
+        "@com_github_cncf_udpa//udpa/annotations:pkg",
+        "//validate:validate_proto",
+    ],
+)
+
+proto_library(
+    name = "semantic_version_proto",
+    srcs = ["semantic_version.proto"],
+    deps = [
+        "@com_github_cncf_udpa//udpa/annotations:pkg",
+    ],
+)
+
+cc_proto_library(
+    name = "http_status_cc_proto",
+    deps = [
+        ":http_status_proto",
+    ],
+)
+
+cc_proto_library(
+    name = "percent_cc_proto",
+    deps = [
+        ":percent_proto",
+    ],
+)
+
+cc_proto_library(
+    name = "semantic_version_cc_proto",
+    deps = [
+        ":semantic_version_proto",
+    ],
+)
+
+# Convenient target -- think of it as an alias for the group of targets.
+# Recommended to use it only when all of them are needed, not to use it
+# as a lazy way to dep on some of them.
+cc_library(
+    name = "envoy_types_cc_proto",
+    deps = [
+        ":http_status_cc_proto",
+        ":percent_cc_proto",
+        ":semantic_version_cc_proto",
+    ],
+)

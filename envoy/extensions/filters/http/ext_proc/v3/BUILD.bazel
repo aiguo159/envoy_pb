@@ -1,0 +1,36 @@
+package(default_visibility = ["//visibility:public"])
+
+load("@rules_proto//proto:defs.bzl", "proto_library")
+
+proto_library(
+    name = "processing_mode_proto",
+    srcs = ["processing_mode.proto"],
+    deps = [
+        "@com_github_cncf_udpa//udpa/annotations:pkg",
+        "@com_github_cncf_udpa//xds/core/v3:pkg",
+        "//validate:validate_proto",
+    ],
+)
+
+proto_library(
+    name = "ext_proc_proto",
+    srcs = ["ext_proc.proto"],
+    deps = [
+        "@com_github_cncf_udpa//udpa/annotations:pkg",
+        "@com_github_cncf_udpa//xds/core/v3:pkg",
+        "//validate:validate_proto",
+        "//envoy/config/common/mutation_rules/v3:mutation_rules_proto",
+        "//envoy/config/core/v3:grpc_service_proto",
+        ":processing_mode_proto",
+    ],
+)
+
+cc_proto_library(
+    name = "processing_mode_cc_proto",
+    deps = [":processing_mode_proto"],
+)
+
+cc_proto_library(
+    name = "ext_proc_cc_proto",
+    deps = [":ext_proc_proto",],
+)

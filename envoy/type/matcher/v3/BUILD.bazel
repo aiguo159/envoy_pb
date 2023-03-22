@@ -1,0 +1,20 @@
+package(default_visibility = ["//visibility:public"])
+
+load("@rules_proto//proto:defs.bzl", "proto_library")
+
+proto_library(
+    name = "regex_proto",
+    srcs = ["regex.proto"],
+    deps = [
+        "@com_github_cncf_udpa//udpa/annotations:pkg",
+        "//envoy/annotations:deprecation_proto",
+        "//validate:validate_proto",
+    ],
+)
+
+cc_proto_library(
+    name = "regex_cc_proto",
+    deps = [
+        ":regex_proto",
+    ],
+)
